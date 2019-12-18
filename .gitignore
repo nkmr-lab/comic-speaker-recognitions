@@ -2,3 +2,8 @@ venv
 .vscode
 .python-version
 .commit_template
+.env
+notebooks
+data/dataset/*
+data/scores/*
+data/result.csv

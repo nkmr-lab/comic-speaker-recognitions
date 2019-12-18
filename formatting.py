@@ -26,7 +26,7 @@ def main():
 
     # 本ごとにグループ分けしてデータセットとユニークなキャラクタIDを書き出す
     for book_id, data_book in dataset_raw.groupby('book_id'):
-        data_book = data_book.sort_values('page')
+        data_book = data_book.sort_values(['page', 'annotation_id'])
         base_name = f'{book_id:03}_{books[book_id - 1]}'
         with open(f'{OUTPUT_DIR}/{base_name}.csv', 'w') as f:
             data_book[['page', 'annotation_id', 'character_id']].to_csv(f, index=None)

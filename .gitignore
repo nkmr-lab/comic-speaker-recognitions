@@ -7,3 +7,4 @@ notebooks
 data/dataset/*
 data/scores/*
 data/result.csv
+data/*

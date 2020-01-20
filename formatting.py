@@ -5,20 +5,20 @@ import os
 import sys
 import datetime
 from dotenv import load_dotenv
+import manga109api
 load_dotenv()
 
 args = sys.argv
 DATASET_FILE = args[1]
 OUTPUT_DIR = 'data/dataset'
 MANGA109_ROOT_DIR = os.environ['MANGA109_ROOT_DIR']
+p = manga109api.Parser(MANGA109_ROOT_DIR)
 
 
 def main():
 
     # 本のタイトル取得
-    with open(f'{MANGA109_ROOT_DIR}/books.txt', 'r') as f:
-        books = f.read()
-    books = books.split('\n')
+    books = p.books
 
     # データセットの生データ取得
     with open(DATASET_FILE, 'r') as f:

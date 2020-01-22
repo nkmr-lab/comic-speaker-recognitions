@@ -7,20 +7,21 @@ from pathlib import Path
 from tqdm import tqdm
 import manga109api
 from dotenv import load_dotenv
+import settings
 load_dotenv()
 
-DATASET_DIR = 'data/dataset'
-OUTPUT_DIR = 'data/scores'
+DATASET_DIR     = 'data/dataset'
+OUTPUT_DIR      = 'data/scores'
+CALC_NAME       = Path(__file__).stem.lstrip('calc_')
+DATASET_NAME    = settings.DATASET_NAME
 manga109_parser = manga109api.Parser(root_dir=os.environ['MANGA109_ROOT_DIR'])
 
 
 def main():
-    for i, book in enumerate(tqdm(manga109_parser.books)):
+    for i, book in enumerate(tqdm(manga109_parser.books[:1])):
         # データセット読み込み
-        annotation = manga109_parser.annotations[book]
+        annotation = manga109_parser.get_annotation(book)
         dataset_path = Path(f'{DATASET_DIR}/{i+1:03}_{book}.csv')
-        if dataset_path.exists() is False:
-            continue
         with open(dataset_path, 'r') as f:
             dataset = pd.read_csv(f)
         with open(f'{DATASET_DIR}/{i+1:03}_{book}_character.txt', 'r') as f:
@@ -31,19 +32,12 @@ def main():
         scores_df = pd.DataFrame(columns=characters_target)
 
         # HACK: データセットのいらない情報まで入っててキモい
-        for annotation_page in annotation['book']['pages']['page']:
+        for annotation_page in annotation['page']:
             page = annotation_page['@index']
-            if 'text' not in annotation_page:
-                continue
             texts = annotation_page['text']
 
-            bodys = annotation_page['body'] if 'body' in annotation_page else []
-            faces = annotation_page['face'] if 'face' in annotation_page else []
-
-            # 外側が配列じゃないことがあることの対策
-            texts = texts if type(texts) is list else [texts]
-            bodys = bodys if type(bodys) is list else [bodys]
-            faces = faces if type(faces) is list else [faces]
+            bodys = annotation_page['body']
+            faces = annotation_page['face']
 
             # ボディのポジションとキャラ名
             bodys_pos = np.array([calc_box_center(b['@xmin'], b['@ymin'], b['@xmax'], b['@xmax']) for b in bodys])
@@ -84,7 +78,7 @@ def main():
                 per_norm = per_norm.rename(annotation_id)
                 scores_df = scores_df.append(per_norm)
 
-        with open(f'{OUTPUT_DIR}/{i+1:03}_{book}_neighbor.csv', 'w') as f:
+        with open(f'{OUTPUT_DIR}/{i+1:03}_{book}/neighbor_{DATASET_NAME}.csv', 'w') as f:
             scores_df.to_csv(f)
 
 

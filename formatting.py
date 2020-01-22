@@ -1,26 +1,21 @@
 # コマンドラインで受け取ったファイルをもとに正解データを作成
 
 import pandas as pd
-import os
 import datetime
 from pathlib import Path
-from dotenv import load_dotenv
-import manga109api
 import settings
-load_dotenv()
 
 
 DATASET_NAME = settings.DATASET_NAME
 DATASET_FILE = f'data/raw/datasets_{DATASET_NAME}.csv'
 OUTPUT_DIR = 'data/dataset'
-MANGA109_ROOT_DIR = os.environ['MANGA109_ROOT_DIR']
-manga109parser = manga109api.Parser(MANGA109_ROOT_DIR)
+manga109_parser = settings.manga109_parser
 
 
 def main():
 
     # 本のタイトル取得
-    books = manga109parser.books
+    books = manga109_parser.books
 
     # データセットの生データ取得
     with open(DATASET_FILE, 'r') as f:

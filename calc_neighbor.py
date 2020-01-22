@@ -2,23 +2,21 @@
 
 import numpy as np
 import pandas as pd
-import os
 from pathlib import Path
 from tqdm import tqdm
-import manga109api
-from dotenv import load_dotenv
 import settings
-load_dotenv()
 
 DATASET_DIR     = 'data/dataset'
 OUTPUT_DIR      = 'data/scores'
 CALC_NAME       = Path(__file__).stem.lstrip('calc_')
 DATASET_NAME    = settings.DATASET_NAME
-manga109_parser = manga109api.Parser(root_dir=os.environ['MANGA109_ROOT_DIR'])
+manga109_parser = settings.manga109_parser
 
 
 def main():
-    for i, book in enumerate(tqdm(manga109_parser.books[:1])):
+    books = manga109_parser.books
+    pbar = tqdm(total=len(books))
+    for i, book in enumerate(books):
         # データセット読み込み
         annotation = manga109_parser.get_annotation(book)
         dataset_path = Path(f'{DATASET_DIR}/{i+1:03}_{book}.csv')
@@ -33,7 +31,6 @@ def main():
 
         # HACK: データセットのいらない情報まで入っててキモい
         for annotation_page in annotation['page']:
-            page = annotation_page['@index']
             texts = annotation_page['text']
 
             bodys = annotation_page['body']
@@ -54,7 +51,7 @@ def main():
 
             for text in texts:
                 annotation_id = text['@id']
-                if annotation_id not in dataset[dataset.page == page]['annotation_id'].values:
+                if annotation_id not in dataset['annotation_id'].values:
                     continue
 
                 # テキストのポジション
@@ -78,8 +75,12 @@ def main():
                 per_norm = per_norm.rename(annotation_id)
                 scores_df = scores_df.append(per_norm)
 
-        with open(f'{OUTPUT_DIR}/{i+1:03}_{book}/neighbor_{DATASET_NAME}.csv', 'w') as f:
+            pbar.set_postfix(title=book, page=f'{annotation_page["@index"]+1}/{len(annotation["page"])}')
+
+        with open(f'{OUTPUT_DIR}/{i+1:03}_{book}/{CALC_NAME}_{DATASET_NAME}.csv', 'w') as f:
             scores_df.to_csv(f)
+
+        pbar.update(1)
 
 
 # バウンディングボックスの中心を求める

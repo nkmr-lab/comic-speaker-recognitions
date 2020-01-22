@@ -8,3 +8,5 @@ data/dataset/*
 data/scores/*
 data/result.csv
 data/*
+
+__pycache__

@@ -2,23 +2,25 @@
 
 import pandas as pd
 import os
-import sys
 import datetime
+from pathlib import Path
 from dotenv import load_dotenv
 import manga109api
+import settings
 load_dotenv()
 
-args = sys.argv
-DATASET_FILE = args[1]
+
+DATASET_NAME = settings.DATASET_NAME
+DATASET_FILE = f'data/raw/datasets_{DATASET_NAME}.csv'
 OUTPUT_DIR = 'data/dataset'
 MANGA109_ROOT_DIR = os.environ['MANGA109_ROOT_DIR']
-p = manga109api.Parser(MANGA109_ROOT_DIR)
+manga109parser = manga109api.Parser(MANGA109_ROOT_DIR)
 
 
 def main():
 
     # 本のタイトル取得
-    books = p.books
+    books = manga109parser.books
 
     # データセットの生データ取得
     with open(DATASET_FILE, 'r') as f:
@@ -37,6 +39,12 @@ def main():
     today_str = datetime.datetime.today().strftime('%Y/%m/%d %H:%M:%S')
     with open(f'{OUTPUT_DIR}/.version', 'w') as f:
         f.write(f'{DATASET_FILE}\n{today_str}')
+
+    # スコア記録用のディレクトリが無かったら作る
+    for i, book in enumerate(books):
+        score_dir = Path(f'data/scores/{i+1:03}_{book}')
+        if not score_dir.exists():
+            score_dir.mkdir()
 
 
 if __name__ == '__main__':

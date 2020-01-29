@@ -8,6 +8,9 @@ load_dotenv()
 MANGA109_ROOT_DIR = os.environ['MANGA109_ROOT_DIR']
 manga109_parser = manga109api.Parser(root_dir=MANGA109_ROOT_DIR)
 
+# mecabのパス
+MECAB_IPADIC_PATH = os.environ['MECAB_IPADIC_PATH']
+
 # データセットの設定
 DATASET_NAME = 'all'
 

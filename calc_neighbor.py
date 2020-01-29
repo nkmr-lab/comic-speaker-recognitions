@@ -67,11 +67,17 @@ def main():
                 per_both = pd.DataFrame({'body': per_body, 'face': per_face}, index=characters_target)  # index指定によりキャラを制限
                 per_both = per_both.fillna(0)
 
-                per = per_both['face'] * 1.5 + per_both['body']
+                # per = per_both['face'] * 1.5 + per_both['body']
+
+                # 得点が最大の方にすることにした
+                per_both['face'] = per_both['face'] * 1.5
+                per = per_both.max(axis=1)
+
                 if per.sum() != 0:
                     per_norm = per / per.sum()
                 else:
-                    per_norm = pd.Series(1.0 / len(characters_target), index=characters_target)
+                    # per_norm = pd.Series(1.0 / len(characters_target), index=characters_target)
+                    per_norm = pd.Series(0, index=characters_target)
                 per_norm = per_norm.rename(annotation_id)
                 scores_df = scores_df.append(per_norm)
 

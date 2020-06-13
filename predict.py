@@ -6,10 +6,8 @@ import settings
 DATASET_DIR     = 'data/dataset'
 manga109_parser = settings.manga109_parser
 DATASET_NAME    = settings.DATASET_NAME
-# SCORE_TYPES     = ['neighbor']
-# SCORE_TYPES     = ['neighbor', 'inframe']
-SCORE_TYPES     = ['neighbor', 'inframe', 'firstperson']
-# SCORE_TYPES     = ['neighbor', 'inframe', 'firstperson', 'bow']
+SCORE_TYPES     = settings.SCORE_TYPES
+UNKNOWN_ID = '99999999'
 
 
 def main():
@@ -36,10 +34,22 @@ def main():
         if score_all.isnull().values.sum() != 0:
             print('err')
 
-        speaker_predict = score_all.idxmax(axis=1)
+        # print(score_all)
+
+        # 各セリフの最大スコアと発話者を取得
+        score_max = score_all.max(axis=1)
+        speaker_predict = score_all.idxmax(axis=1)  # 最大スコア重複の場合，最初の発話者が取られる
+
+        # 重複を削除するため，最大スコアを引いた結果0になる要素の数が0以外の行をboolとして取り出す
+        score_max_diff = score_all.values - score_max.values.reshape([-1, 1])
+        bool_duplicate = (score_max_diff == 0).sum(axis=1) != 1
+
+        # 最大スコアが重複してたセリフは不明にする
+        speaker_predict.loc[bool_duplicate] = UNKNOWN_ID
+
+        # speaker_predict = score_all_nodupl.idxmax(axis=1)
         # print(speaker_predict)
         speaker_df = pd.DataFrame({'book_id': i + 1, 'annotation_id': speaker_predict.index, 'character_id': speaker_predict.values})
-        # print(speaker_df)
         predict_all = pd.concat([predict_all, speaker_df])
 
     scoring_name = ''.join([t[0] for t in SCORE_TYPES])

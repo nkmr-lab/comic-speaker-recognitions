@@ -40,7 +40,17 @@ def main():
                 # print(text)
                 # ここから計算スタート
                 text_bbox = (text['@xmin'], text['@xmax'], text['@ymin'], text['@ymax'])
-                bubble_contour = get_bubble_contour(img, text_bbox)
+                try:
+                    bubble_contour = get_bubble_contour(img, text_bbox)
+                except:
+                    print('err')
+                    continue
+                # 適当だが，ありえないほど輪郭が長いやつはバルーンじゃないとして弾く（これが速度を遅くする原因）
+                if len(bubble_contour) > 2000:
+                    continue
+                # 少なすぎてもだめ
+                if len(bubble_contour) < 10:
+                    continue
                 x = bubble_contour[:, 0]
                 y = bubble_contour[:, 1]
                 curv = curvature_splines(x, y)
@@ -117,6 +127,7 @@ def get_bubble_contour(img, text_bbox):
     _, label = cv2.connectedComponents(gray)
 
     # テキストが存在する中で，0（背景ラベル）を除く最も数が多いラベルを取得
+    # FIXME: どうやらbubble_labelがからになることがあるらしい
     trim_label = label[ymin:ymax, xmin:xmax]
     bubble_label, _ = stats.mode(trim_label[trim_label.nonzero()], axis=None)
     bubble_label = bubble_label[0]

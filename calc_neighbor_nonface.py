@@ -70,7 +70,7 @@ def main():
                 # per = per_both['face'] * 1.5 + per_both['body']
 
                 # 得点が最大の方にすることにした
-                per_both['face'] = per_both['face'] * 1.5
+                # per_both['face'] = per_both['face'] * 1.5
                 per = per_both.max(axis=1)
 
                 if per.sum() != 0:

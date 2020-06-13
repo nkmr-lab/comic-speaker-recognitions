@@ -38,7 +38,7 @@ def main():
                     bodys_chara = {body['@character'] for body in bodys_inframe}
                     faces_chara = {face['@character'] for face in faces_inframe}
                     characters_inframe = characters_inframe | bodys_chara | faces_chara
-
+                characters_inframe = characters_inframe & set(characters_target)  # ターゲットに無いキャラクタを省く
                 score = 1.0 / len(characters_inframe) if len(characters_inframe) != 0 else 0
                 scores_se = pd.Series(score, index=characters_inframe, name=text['@id'])
                 scores_df = scores_df.append(scores_se)

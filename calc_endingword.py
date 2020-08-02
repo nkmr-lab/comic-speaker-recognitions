@@ -49,7 +49,7 @@ def main():
         score_dir = f'data/scores/{i+1:03}_{book}'
         with open(f'{score_dir}/inframe_{DATASET_NAME}.csv', 'r') as f:
             inframe_score = pd.read_csv(f, index_col=0)
-        with open(f'{score_dir}/neighbor_{DATASET_NAME}.csv', 'r') as f:
+        with open(f'{score_dir}/neighbor_nonface_{DATASET_NAME}.csv', 'r') as f:
             neighbor_score = pd.read_csv(f, index_col=0)
         with open(f'{score_dir}/taildirection3_{DATASET_NAME}.csv', 'r') as f:
             taildirection_score = pd.read_csv(f, index_col=0)

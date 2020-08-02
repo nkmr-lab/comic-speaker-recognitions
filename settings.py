@@ -19,7 +19,7 @@ SCORE_TYPES = [
     'neighbor_nonface',
     'inframe',
     'taildirection3',
-    # 'firstperson', 'endingword'
+    'firstperson', 'endingword'
 ]
 
 UPDATE = True

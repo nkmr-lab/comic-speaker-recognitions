@@ -153,4 +153,6 @@ data/predict/*
 !data/predict/.gitkeep
 
 data/scores/*
-!data/predict/.gitkeep
+!data/scores/.gitkeep
+
+tmp/

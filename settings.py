@@ -1,5 +1,6 @@
 
 import os
+import sys
 import manga109api
 from dotenv import load_dotenv
 
@@ -13,6 +14,8 @@ MECAB_IPADIC_PATH = os.environ['MECAB_IPADIC_PATH']
 
 # データセットの設定
 DATASET_NAME = 'top5'
+if len(sys.argv) > 1:
+    DATASET_NAME = sys.argv[1]
 
 # 計算方法の設定
 SCORE_TYPES = [
@@ -21,5 +24,7 @@ SCORE_TYPES = [
     'taildirection3',
     'firstperson', 'endingword'
 ]
+if len(sys.argv) > 2:
+    SCORE_TYPES = sys.argv[2].split(',')
 
 UPDATE = True

@@ -40,7 +40,7 @@ $ cp .env.example .env
 - [dataset_all.csv（全てのキャラクタを対象としたセリフ）](https://nkmr.io/comic/speaker-dataset/public/datasets_all.csv)
 - [dataset_top5.csv（出現率上位5名のキャラクタに絞ったセリフ）](https://nkmr.io/comic/speaker-dataset/public/datasets_top5.csv)
 
-こちらは、[セリフ発話者データセット]()を本研究のために整形したものになります。
+こちらは、[セリフ発話者データセット](https://nkmr.io/comic/speaker-dataset/)を本研究のために整形したものになります。
 上記のデータをダウンロード後、本プロジェクトの`data/raw`以下に置いてください。
 
 (※)コマンドで実行する例

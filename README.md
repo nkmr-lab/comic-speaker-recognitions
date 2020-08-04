@@ -26,10 +26,12 @@ macの場合、インストールは[こちらの記事](https://qiita.com/taroc
 # インストール
 
 インストール前に`python -m venv venv && source venv/bin/activate`などを実行して仮想環境を作ることをお勧めします。
-```
+
+```Shell
 $ pip install -r requirements.txt
 
 $ cp .env.example .env
+
 ```
 
 上記コマンドを実行後に`.env`の中身を編集してください。  
@@ -44,16 +46,16 @@ $ cp .env.example .env
 上記のデータをダウンロード後、本プロジェクトの`data/raw`以下に置いてください。
 
 (※)コマンドで実行する例
-```
-curl -o data/raw/datasets_all.csv https://nkmr.io/comic/speaker-dataset/public/datasets_all.csv
-curl -o data/raw/datasets_top5.csv https://nkmr.io/comic/speaker-dataset/public/datasets_top5.csv
+```Shell
+$ curl -o data/raw/datasets_all.csv https://nkmr.io/comic/speaker-dataset/public/datasets_all.csv
+$ curl -o data/raw/datasets_top5.csv https://nkmr.io/comic/speaker-dataset/public/datasets_top5.csv
 ```
 
 # 実行方法
 
 ## サンプル
 修士論文の表6.2における「組み合わせの正解率」を得るための実行例です。
-```
+```Shell
 $ make calc data=all target=neighbor_nonface,inframe,taildirection3,firstperson,endingword
 
 $ make predict data=all target=neighbor_nonface,inframe,taildirection3,firstperson,endingword
@@ -67,16 +69,18 @@ $ make predict data=all target=neighbor_nonface
 
 # all ['neighbor_nonface']
 # 0.5568949606143502
+
 ```
 
 各コマンドの詳細は以下を参照してください。
 
 ## スコア計算の実行
-```
+
+```Shell
 # 全てのキャラクタを対象に、全ての手法の計算を行う
 $ make calc data=all target=neighbor_nonface,inframe,taildirection3,firstperson,endingword
 
-# neighbor_nonfacee: セリフとキャラクタの距離による計算
+# neighbor_nonface: セリフとキャラクタの距離による計算
 # inframe:           同じコマ内にいるキャラクタの情報による計算
 # taildirection3:    吹き出しのしっぽ方向による計算
 # firstperson:       一人称による計算
@@ -89,6 +93,7 @@ $ make calc data=top5 target=neighbor_nonface,inframe,taildirection3,firstperson
 
 # （任意）targetの引数をカンマ区切りで指定することで手法を指定する
 $ make calc data=all target=neighbor_nonface,inframe
+
 ```
 
 `make cale <オプション>` によって、発話者を推定するためのスコアの計算を行います。  
@@ -98,13 +103,14 @@ $ make calc data=all target=neighbor_nonface,inframe
 
 windowsで実行する場合は、makeコマンドが正常に作動しない可能性が高いです。
 その場合、以下を順に実行してください。
-```
-python formatting.py all
-python calc_neighbor_nonface.py all
-python calc_inframe.py all
-python calc_taildirection3.py all
-python calc_firstperson.py all
-python calc_endingword.py all
+```Shell
+$ python formatting.py all
+$ python calc_neighbor_nonface.py all
+$ python calc_inframe.py all
+$ python calc_taildirection3.py all
+$ python calc_firstperson.py all
+$ python calc_endingword.py all
+
 ```
 
 上記を実行することで、`data/scores`以下に値を記録したcsvファイルが作成されます。  
@@ -113,7 +119,8 @@ python calc_endingword.py all
 ただし、同じオプションで実行したものについては一度計算すればcsvファイルが残るため、再度実行する必要はありません。
 
 ## 推定の実行
-```
+
+```Shell
 # 全てのキャラクタを対象に、全ての手法の計算を行う
 $ make predict data=all target=neighbor_nonface,inframe,taildirection3,firstperson,endingword
 
@@ -123,6 +130,7 @@ $ make predict data=all target=neighbor_nonface,inframe,taildirection3,firstpers
 # （任意）手法を限定する場合
 $ make predict data=all target=inframe  # 同じコマによる手法
 $ make predict data=all target=firstperson,endingword  # 一人称・語尾による手法
+
 ```
 
 `make predict <オプション>`によって、発話者推定の正解率を標準出力に表示します。  

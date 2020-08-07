@@ -37,11 +37,11 @@ def main():
             faces = annotation_page['face']
 
             # ボディのポジションとキャラ名
-            bodys_pos = np.array([calc_box_center(b['@xmin'], b['@ymin'], b['@xmax'], b['@xmax']) for b in bodys])
+            bodys_pos = np.array([calc_box_center(b['@xmin'], b['@ymin'], b['@xmax'], b['@ymax']) for b in bodys])
             bodys_pos = bodys_pos if len(bodys_pos) != 0 else np.empty((0, 2))  # 距離計算用に配列が空だったときの形を変える
             bodys_chara = [b['@character'] for b in bodys]
             # フェイスのポジションとキャラ名
-            faces_pos = np.array([calc_box_center(f['@xmin'], f['@ymin'], f['@xmax'], f['@xmax']) for f in faces])
+            faces_pos = np.array([calc_box_center(f['@xmin'], f['@ymin'], f['@xmax'], f['@ymax']) for f in faces])
             faces_pos = faces_pos if len(faces_pos) != 0 else np.empty((0, 2))
             faces_chara = [f['@character'] for f in faces]
 

@@ -54,21 +54,22 @@ $ curl -o data/raw/datasets_top5.csv https://nkmr.io/comic/speaker-dataset/publi
 # 実行方法
 
 ## サンプル
-修士論文の表6.2における「組み合わせの正解率」を得るための実行例です。
+修士論文の表6.2における「組み合わせの正解率」を得るための実行例です。  
+**（2020/08/08 追記）計算方法のミスを修正したため、修士論文とは異なる結果が表示されます。**
 ```Shell
 $ make calc data=all target=neighbor_nonface,inframe,taildirection3,firstperson,endingword
 
 $ make predict data=all target=neighbor_nonface,inframe,taildirection3,firstperson,endingword
 
 # all ['neighbor_nonface', 'inframe', 'taildirection3', 'firstperson', 'endingword']
-# 0.707491513134043
+# 0.7851257374509739
 
 
 # 単一の手法による推定結果は以下によって得られる
 $ make predict data=all target=neighbor_nonface
 
 # all ['neighbor_nonface']
-# 0.5568949606143502
+# .7433753007481626
 
 ```
 
@@ -125,7 +126,7 @@ $ python calc_endingword.py all
 $ make predict data=all target=neighbor_nonface,inframe,taildirection3,firstperson,endingword
 
 # all ['neighbor_nonface', 'inframe', 'taildirection3', 'firstperson', 'endingword']
-# 0.707491513134043
+# 0.7851257374509739
 
 # （任意）手法を限定する場合
 $ make predict data=all target=inframe  # 同じコマによる手法

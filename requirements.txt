@@ -1,4 +1,4 @@
-joblib==0.16.0
+joblib==1.2.0
 -e git+https://github.com/nkmr-lab/manga109api.git@a5d888892054b1e9d914a428035fd7c2bb5e8347#egg=manga109api
 mecab-python3==1.0.1
 numpy==1.19.1
